@@ -1,3 +1,5 @@
+//TODO: improve the csv-gen func or use pipe. Read about pipe lifecycle.
+
 const fs = require('fs');
 const util = require('util');
 
@@ -45,7 +47,7 @@ const randomCsvGen = (length, separator = ',', path) => {
                 commaCount = 0;
                 rowCount++;
             }
-            if (rowCount > 100) {
+            if (rowCount > 50) {
                 if (!writeFile.write('\n')) {
                     return;
                 }
@@ -58,7 +60,7 @@ const randomCsvGen = (length, separator = ',', path) => {
 };
 
 handleDetect().then(r => {
-        randomCsvGen(10000000, ',', r);
+        randomCsvGen(1000, ',', r);
     }
 );
 
