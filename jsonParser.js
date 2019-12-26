@@ -1,10 +1,12 @@
+// TODO: Provide errors handling for converting process and incorrect command line arguments
+
 const fs = require('fs');
 const { Transform } = require('stream');
 
 const cvsPath = __dirname + '/csv';
 const jsonPath = __dirname + '/json';
 
-const var1 = fs.createReadStream(cvsPath + '/test3.txt');
+const var1 = fs.createReadStream(cvsPath + '/test1.txt');
 
 const var2 = new Transform({
     readableObjectMode: true,
@@ -40,4 +42,8 @@ const var4 = new Transform({
 
 const var5 = fs.createWriteStream(jsonPath + '/test1.json');
 
-var1.pipe(var2).pipe(var3).pipe(var4).pipe(var5);
+var1
+    .pipe(var2)
+    .pipe(var3)
+    .pipe(var4)
+    .pipe(var5);
