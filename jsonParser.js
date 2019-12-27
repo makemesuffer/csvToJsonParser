@@ -1,43 +1,35 @@
-// TODO: Provide errors handling for converting process and incorrect command line arguments with pipe
-
 const fs = require('fs');
-const { Transform } = require('stream');
+const {Transform} = require('stream');
 
 const cvsPath = __dirname + '/csv';
 const jsonPath = __dirname + '/json';
 
-const var1 = fs.createReadStream(cvsPath + '/test0.csv');
+const var1 = fs.createReadStream(cvsPath + '/test2.csv');
 
 const var2 = new Transform({
     readableObjectMode: true,
 
     transform(chunk, encoding, callback) {
-        let string = chunk.toString();
+        const string = chunk.toString();
         const arr = [];
-        stringNation(string);
-        function stringNation(str){
+        const stringNation = (str) => {
             let newLine;
-            if(str.match('\n') !== null){
+            if (str.match('\n') !== null) {
                 newLine = str.match('\n').index;
-            } else{
+            } else {
                 arr.push(str);
                 return;
             }
-            let newString = str.slice(0,newLine);
+            let newString = str.slice(0, newLine);
             arr.push(newString);
-            let chego = str.slice(newLine+1);
-            return stringNation(chego);
-        }
-        console.log(arr);
-        // TODO: Send this arr to next transform and split the elements there, use forEach and if index = 0 write it as an obj prop otherwise as a value in an array!!!!
-
-        this.push(chunk.toString().split(','));
+            return stringNation(str.slice(newLine + 1));
+        };
+        stringNation(string);
+        this.push(arr);
         callback();
     }
 });
 
-
-//name: [andrew,kolya]
 
 const var3 = new Transform({
     readableObjectMode: true,
@@ -45,9 +37,19 @@ const var3 = new Transform({
 
     transform(chunk, encoding, callback) {
         const obj = {};
-        for(let i=0; i < chunk.length; i++) {
-            obj[chunk[i]] = chunk[i+1];
-        }
+        const testArr = [];
+        const header = chunk[0].split(',');
+        header.pop();
+        const rest = chunk.slice(1, chunk.length);
+        rest.forEach((elem) => {
+            const newArr = elem.split(',');
+            newArr.forEach((elem, index) => {
+                testArr[index] === undefined ? testArr[index] = elem : testArr[index] += ' ' + elem;
+            })
+        });
+        header.forEach((item, index) => {
+            obj[item] = testArr[index].split(' ');
+        });
         this.push(obj);
         callback();
     }
@@ -62,10 +64,20 @@ const var4 = new Transform({
     }
 });
 
-const var5 = fs.createWriteStream(jsonPath + '/test0.json');
+const var5 = fs.createWriteStream(jsonPath + '/test2.json');
 
-var1
-    .pipe(var2)
-    .pipe(var3)
-    .pipe(var4)
-    .pipe(var5);
+var1.on("error", function (e) {
+    console.log(e);
+})
+    .pipe(var2).on("error", function (e) {
+    console.log(e);
+})
+    .pipe(var3).on("error", function (e) {
+    console.log(e);
+})
+    .pipe(var4).on("error", function (e) {
+    console.log(e);
+})
+    .pipe(var5).on("error", function (e) {
+    console.log(e);
+});

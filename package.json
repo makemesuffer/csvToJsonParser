@@ -1,0 +1,23 @@
+{
+  "name": "csvToJsonParser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "argv.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makemesuffer/csvToJsonParser.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/makemesuffer/csvToJsonParser/issues"
+  },
+  "homepage": "https://github.com/makemesuffer/csvToJsonParser#readme",
+  "dependencies": {
+    "minimist": "^1.2.0"
+  }
+}

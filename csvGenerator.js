@@ -1,5 +1,3 @@
-//TODO: improve the csv-gen func or use pipe. Read about pipe lifecycle.
-
 const fs = require('fs');
 const util = require('util');
 
@@ -23,7 +21,6 @@ const handleDetect = async () => {
 };
 
 
-// TODO:  detect the separator that is used for parsing
 const randomCsvGen = (length, separator = ',', path) => {
     const writeFile = fs.createWriteStream(path);
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -33,7 +30,11 @@ const randomCsvGen = (length, separator = ',', path) => {
     writeFile.on('drain', () => {
         write();
     });
+    writeFile.on('finish', () => {
+        console.log('are u working?')
+    });
     write();
+
     function write() {
         for (let i = 1; length >= i; i++) {
             commaCount++;
@@ -60,7 +61,7 @@ const randomCsvGen = (length, separator = ',', path) => {
 };
 
 handleDetect().then(r => {
-        randomCsvGen(1000, ',', r);
+        randomCsvGen(25000000, ',', r);
     }
 );
 
