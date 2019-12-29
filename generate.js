@@ -1,27 +1,40 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const util = require('util');
 
-const cvsPath = __dirname + '/csv';
+const minimist = require('minimist');
+
+
+let args = minimist(process.argv.slice(2), {
+    string: ['separator'],
+    alias: {'resultFile': 'rf', 'separator': 's'},
+    default: {'separator': ','},
+});
+
+if (args.resultFile === undefined) {
+    throw new Error('vvedi pojaluista directoriu bro');
+}
 
 const readdir = util.promisify(fs.readdir);
 
 const handleDetect = async () => {
     let fileArr;
     try {
-        fileArr = await readdir(cvsPath);
-        let res;
-        if (fileArr.length === 0) return cvsPath + '/' + `test${0}.csv`;
+        fileArr = await readdir(args.resultFile);
+        let fileName;
+        if (fileArr.length === 0) return args.resultFile + '/' + `test${0}.csv`;
         fileArr.forEach(function (elem, index) {
-            if (fileArr[index + 1] !== `test${index + 1}.csv`) res = `test${index + 1}.csv`
+            if (fileArr[index + 1] !== `test${index + 1}.csv`) fileName = `test${index + 1}.csv`
         });
-        return cvsPath + '/' + res;
+        return args.resultFile + '/' + fileName;
     } catch (e) {
         console.log(e);
     }
 };
 
 
-const randomCsvGen = (length, separator = ',', path) => {
+const randomCsvGen = (length, separator, path) => {
     const writeFile = fs.createWriteStream(path);
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
@@ -30,8 +43,8 @@ const randomCsvGen = (length, separator = ',', path) => {
     writeFile.on('drain', () => {
         write();
     });
-    writeFile.on('finish', () => {
-        console.log('are u working?')
+    writeFile.on('end', () => {
+        process.exit();
     });
     write();
 
@@ -61,7 +74,7 @@ const randomCsvGen = (length, separator = ',', path) => {
 };
 
 handleDetect().then(r => {
-        randomCsvGen(25000000, ',', r);
+        randomCsvGen(2500, args.separator, r);
     }
 );
 

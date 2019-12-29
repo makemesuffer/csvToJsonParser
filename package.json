@@ -1,10 +1,14 @@
 {
-  "name": "csvToJsonParser",
+  "name": "csvmegaparser",
   "version": "1.0.0",
   "description": "",
-  "main": "argv.js",
+  "main": "parse.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "generate": "./generate.js",
+    "parse": "./parse.js"
   },
   "repository": {
     "type": "git",
